@@ -13,6 +13,6 @@ TOOLCHAIN_TARGET_TASK += "googletest"
 PV = "${DISTRO_VERSION}"
 
 # install any runtime dependencies of our platform application
-IMAGE_INSTALL_append = " libstdc++ libssl avahi-daemon libavahi-client libavahi-common libavahi-core libmosquitto1 libmosquittopp1 protobuf-lite zlib yaml-cpp libelf libxml2"
+IMAGE_INSTALL_append = " libstdc++ libssl avahi-daemon libavahi-client libavahi-common libavahi-core libmosquitto1 libmosquittopp1 protobuf-lite zlib yaml-cpp libelf libxml2 seasocks"
 
 inherit irma-6-firmware-zip
