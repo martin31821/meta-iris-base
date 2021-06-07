@@ -1,0 +1,64 @@
+From 4b0099e054039b2527ebe1d368f324f5e9a48073 Mon Sep 17 00:00:00 2001
+From: Tom Schubert <t.schubert@asis-it.de>
+Date: Mon, 7 Jun 2021 11:11:22 +0200
+Subject: [PATCH] Added multiple remote hosts in syslog-init script
+
+This patch adds the ability to specify multiple remote logging
+destinations
+
+Upstream-Status: Inappropriate
+
+Signed-off-by: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
+
+---
+ syslog              | 12 ++++++++++--
+ syslog-startup.conf |  3 +--
+ 2 files changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/syslog b/syslog
+index 2208613e8c..778643ab9f 100644
+--- a/syslog
++++ b/syslog
+@@ -12,6 +12,11 @@ set -e
+ 
+ if [ -f /etc/syslog-startup.conf ]; then
+ 	. /etc/syslog-startup.conf
++
++	if [ -f /etc/syslog-remotes.conf ]; then
++		. /etc/syslog-remotes.conf
++	fi
++
+ 	LOG_LOCAL=0
+ 	LOG_REMOTE=0
+ 	for D in $DESTINATION; do
+@@ -30,8 +35,11 @@ if [ -f /etc/syslog-startup.conf ]; then
+ 			fi
+ 			LOG_LOCAL=1
+ 		elif [ "$D" = "remote" ]; then
+-			SYSLOG_ARGS="$SYSLOG_ARGS -R $REMOTE"
+-			LOG_REMOTE=1
++			for HOST in $REMOTE; do
++				HOST_LIST="$HOST_LIST -R $HOST"
++				LOG_REMOTE=1
++			done
++			SYSLOG_ARGS="$SYSLOG_ARGS $HOST_LIST"
+ 		fi
+ 	done
+ 	if [ "$LOG_LOCAL" = "1" -a "$LOG_REMOTE" = "1" ]; then
+diff --git a/syslog-startup.conf b/syslog-startup.conf
+index fda450aa0d..4e43bdb50e 100644
+--- a/syslog-startup.conf
++++ b/syslog-startup.conf
+@@ -1,9 +1,8 @@
+ # This configuration file is used by the busybox syslog init script,
+ # /etc/init.d/syslog[.busybox] to set syslog configuration at start time.
+ 
+-DESTINATION=file		# log destinations (buffer file remote)
++DESTINATION=remote		# log destinations (buffer file remote)
+ LOGFILE=/var/log/messages	# where to log (file)
+-REMOTE=loghost:514		# where to log (syslog remote)
+ REDUCE=no			# reduce-size logging
+ DROPDUPLICATES=no		# whether to drop duplicate log entries
+ #ROTATESIZE=0			# rotate log if grown beyond X [kByte]
+-- 
+2.20.1
