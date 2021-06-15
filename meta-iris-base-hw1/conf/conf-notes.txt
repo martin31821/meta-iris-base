@@ -1,0 +1,3 @@
+Common targets are:
+    irma-six-base-hw1
+    irma-six-base-hw1 -c populate_sdk

@@ -1,15 +1,13 @@
-This README file contains information on the contents of the meta-iris-base layer.
+This README file contains information on the contents of the
+meta-iris-base layer collection.
 
 Please see the corresponding sections below for details.
-
-Dependencies
-============
- -
 
 Patches
 =======
 
-Please submit any patches against the meta-iris-base layer via github pull requests
+Please submit any patches against the meta-iris-base layer collection via
+GitHub pull requests or as patch files via email to the maintainers.
 
 Maintainers: 
 - Jasper Orschulko <Jasper [dot] Orschulko [at] iris-sensing.com>
@@ -18,20 +16,32 @@ Maintainers:
 Table of Contents
 =================
 
-   I. Adding the meta-iris-base layer to your build
-  II. Misc
+1. Current layers
+2. Usage
+3. Misc
 
+Current layers
+==============
 
-I. Adding the meta-iris-base layer to your build
-=================================================
+Currently, this layer collection contains the following layers:
+- **meta-iris-base-common** contains common code for HW release 1 and 2
+- **meta-iris-base-hw1** contains code specific to HW release 1
+- **meta-iris-base-hw2** contains code specific to HW release 1
 
-Run 'bitbake-layers add-layer meta-iris-base'
+Usage
+=====
 
-III. Misc
-========
+Check out our KAS setup at [https://github.com/iris-GmbH/iris-kas]
 
-This repository contains the configuration, recipes and modifications for building the iris custom Linux distribution (the irma-six-base image), minus our proprietary platform application.
+Misc
+====
 
-The Maintainers of this layer focus on supporting the current Yocto LTS release.
-However, feel free to add support for other layers via pull requests.
-In the future we plan to include all currently supported Yocto releases in a CI workflow.
+This repository contains the multiple layers, which in turn contain the
+configurations, recipes and modifications for building the iris custom Linux
+distribution (the irma-six-base image), minus our proprietary platform
+application.
+
+The maintainers of this repository focus on supporting the current Yocto LTS 
+release. However, feel free to add support for other releases via pull requests.
+In the future we plan to include all currently supported Yocto releases
+in a CI workflow.

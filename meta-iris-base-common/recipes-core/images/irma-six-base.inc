@@ -22,5 +22,3 @@ add_image_name_to_os_release(){
 }
 
 ROOTFS_POSTPROCESS_COMMAND += "add_image_name_to_os_release; "
-
-inherit irma-6-firmware-zip
