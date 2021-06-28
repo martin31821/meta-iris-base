@@ -17,6 +17,8 @@
 do_createfirmwarezip[depends] += "${PN}:do_image_complete"
 do_createfirmwarezip[depends] += "virtual/kernel:do_deploy"
 do_createfirmwarezip[depends] += "virtual/bootloader:do_deploy"
+# we need the sysroot to access u-boot versioning file
+do_createfirmwarezip[deptask] += "do_populate_sysroot"
 do_createfirmwarezip[nostamp] = "1"
 
 DEPENDS += "python3-pyyaml-native"
@@ -53,22 +55,27 @@ python do_createfirmwarezip() {
         deployfiles = {}
         deployfiles['kernel']  = get_fullpath(deploy_dir, select_file('FIRMWARE_ZIP_KERNEL_NAME',  'KERNEL_IMAGETYPE'))
         deployfiles['devtree'] = get_fullpath(deploy_dir, select_file('FIRMWARE_ZIP_DEVTREE_NAME', 'KERNEL_DEVICETREE'))
+        # links are necessary, so we clean older builds
         rootfs_link_name = "{:s}.{:s}".format(d.getVar('IMAGE_LINK_NAME', True), d.getVar('FLASH_FSTYPE', True))
         deployfiles['rootfs']  = get_fullpath(work_dir, select_file('FIRMWARE_ZIP_ROOTFS_NAME', default_str=rootfs_link_name))
         deployfiles['u-boot']  = get_fullpath(deploy_dir, select_file('FIRMWARE_ZIP_BOOTLOADER_NAME', 'UBOOT_SYMLINK'))
         return deployfiles
 
     def create_meta_and_zip(deployfiles, metatype, file_list):
-        version_string_full = "{:s}-{:s}-{:s}".format(metatype, d.getVar('PV', True), d.getVar('IMAGE_NAME', True))
-        version_string_short = "{:s}-{:s}-{:s}".format(metatype, d.getVar('PN', True), d.getVar('PV', True))
+
+        version_string = "{:s}-{:s}".format(metatype, d.getVar('FIRMWARE_VERSION', True))
 
         # Create meta.yaml
         meta = {}
         meta[metatype] = {}
         for f in file_list:
             meta[metatype][f] = { 'file': os.path.basename(deployfiles[f]) }
-        meta["version"] = version_string_full
-
+        meta["version"] = version_string
+        # additionally add the u-boot versioning to the meta.yml file
+        if metatype == "bootloader":
+            with open(d.getVar('STAGING_DIR_HOST', True) + d.getVar('datadir', True) + '/uboot.release','r') as f:
+                bootloader_version = f.readline().rstrip()
+            meta["uboot-version"] = bootloader_version
         # Write meta.yaml to /tmp
         meta_temp = tempfile.NamedTemporaryFile(mode = "w")
         yaml.dump(meta, meta_temp.file)
@@ -77,9 +84,10 @@ python do_createfirmwarezip() {
         update_file_dir = os.path.join(deploy_dir, 'update_files')
         os.makedirs(update_file_dir, exist_ok=True)
 
-        zip_full_name = "{:s}.zip".format(version_string_full)
-        zip_link_name = "{:s}.zip".format(version_string_short)
-        zip_path = os.path.join(update_file_dir, zip_full_name)
+        zip_long_name = "{:s}.zip".format(version_string)
+        # links are necessary, so we clean older builds
+        zip_link_name = "{:s}-{:s}.zip".format(metatype, d.getVar('PN', True))
+        zip_path = os.path.join(update_file_dir, zip_long_name)
         zip_link = os.path.join(update_file_dir, zip_link_name)
 
         # Remove old artifacts
