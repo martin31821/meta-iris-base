@@ -1,0 +1,55 @@
+From ea577672e93c71cfb0f3ea39c2ce8b015c04cd97 Mon Sep 17 00:00:00 2001
+From: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
+Date: Sat, 3 Jul 2021 13:27:40 +0200
+Subject: [PATCH] meta-imx: Modify meta-ml for usage in dunfell
+
+- force dunfell compatibility on NXP's upstream meta-ml layer.
+- lower layer priority, as to only use these layers if really necessary, thus
+reducing the chance of version conflicts.
+- move necessary config files into meta-ml layer, in order to reduce the
+  number of additional layers and thus potential issues.
+
+Signed-off-by: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
+---
+ {meta-bsp => meta-ml}/classes/fsl-eula2-unpack2.bbclass       | 0
+ {meta-bsp => meta-ml}/classes/fsl-eula2.bbclass               | 0
+ meta-ml/conf/layer.conf                                       | 4 ++--
+ .../recipes-fsl/packagegroup/packagegroup-imx-ml.bb           | 0
+ .../recipes-security/ml-security/ml-security_1.0.4.bb         | 0
+ 5 files changed, 2 insertions(+), 2 deletions(-)
+ rename {meta-bsp => meta-ml}/classes/fsl-eula2-unpack2.bbclass (100%)
+ rename {meta-bsp => meta-ml}/classes/fsl-eula2.bbclass (100%)
+ rename {meta-sdk => meta-ml}/recipes-fsl/packagegroup/packagegroup-imx-ml.bb (100%)
+ rename {meta-bsp => meta-ml}/recipes-security/ml-security/ml-security_1.0.4.bb (100%)
+
+diff --git a/meta-bsp/classes/fsl-eula2-unpack2.bbclass b/meta-ml/classes/fsl-eula2-unpack2.bbclass
+similarity index 100%
+rename from meta-bsp/classes/fsl-eula2-unpack2.bbclass
+rename to meta-ml/classes/fsl-eula2-unpack2.bbclass
+diff --git a/meta-bsp/classes/fsl-eula2.bbclass b/meta-ml/classes/fsl-eula2.bbclass
+similarity index 100%
+rename from meta-bsp/classes/fsl-eula2.bbclass
+rename to meta-ml/classes/fsl-eula2.bbclass
+diff --git a/meta-ml/conf/layer.conf b/meta-ml/conf/layer.conf
+index 360ec3560..03b356d47 100644
+--- a/meta-ml/conf/layer.conf
++++ b/meta-ml/conf/layer.conf
+@@ -7,5 +7,5 @@ BBFILES += "${LAYERDIR}/recipes-*/*/*.bb \
+ 
+ BBFILE_COLLECTIONS += "meta-ml"
+ BBFILE_PATTERN_meta-ml := "^${LAYERDIR}/"
+-BBFILE_PRIORITY_meta-ml = "8"
+-LAYERSERIES_COMPAT_meta-ml = "warrior zeus gatesgarth hardknott"
++BBFILE_PRIORITY_meta-ml = "1"
++LAYERSERIES_COMPAT_meta-ml = "warrior zeus dunfell gatesgarth hardknott"
+diff --git a/meta-sdk/recipes-fsl/packagegroup/packagegroup-imx-ml.bb b/meta-ml/recipes-fsl/packagegroup/packagegroup-imx-ml.bb
+similarity index 100%
+rename from meta-sdk/recipes-fsl/packagegroup/packagegroup-imx-ml.bb
+rename to meta-ml/recipes-fsl/packagegroup/packagegroup-imx-ml.bb
+diff --git a/meta-bsp/recipes-security/ml-security/ml-security_1.0.4.bb b/meta-ml/recipes-security/ml-security/ml-security_1.0.4.bb
+similarity index 100%
+rename from meta-bsp/recipes-security/ml-security/ml-security_1.0.4.bb
+rename to meta-ml/recipes-security/ml-security/ml-security_1.0.4.bb
+-- 
+2.32.0
+
