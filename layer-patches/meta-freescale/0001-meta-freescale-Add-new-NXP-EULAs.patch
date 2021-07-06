@@ -1,0 +1,38 @@
+From 46dc3e88e9f25652d26766de0598d1661e21d4fa Mon Sep 17 00:00:00 2001
+From: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
+Date: Tue, 6 Jul 2021 12:48:45 +0200
+Subject: [PATCH] meta-freescale: Add new NXP EULAs
+
+meta-ml depends on additional EULAs, which have not yet been added to
+the dunfell branch.
+
+Signed-off-by: Jasper Orschulko <Jasper.Orschulko@iris-sensing.com>
+---
+ classes/fsl-eula-unpack.bbclass | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/classes/fsl-eula-unpack.bbclass b/classes/fsl-eula-unpack.bbclass
+index 65128300..95eead12 100644
+--- a/classes/fsl-eula-unpack.bbclass
++++ b/classes/fsl-eula-unpack.bbclass
+@@ -27,6 +27,8 @@ FSL_EULA_FILE_MD5SUM_LA_OPT_NXP_SOFTWARE_LICENSE_V8  = "72c0f70181bb6e83eee6aab8
+ FSL_EULA_FILE_MD5SUM_LA_OPT_NXP_SOFTWARE_LICENSE_V9  = "6c12031a11b81db21cdfe0be88cac4b3"
+ FSL_EULA_FILE_MD5SUM_LA_OPT_NXP_SOFTWARE_LICENSE_V10 = "fd4b227530cd88a82af6a5982cfb724d"
+ FSL_EULA_FILE_MD5SUM_LA_OPT_NXP_SOFTWARE_LICENSE_V11 = "228c72f2a91452b8a03c4cab30f30ef9"
++FSL_EULA_FILE_MD5SUM_LA_OPT_NXP_SOFTWARE_LICENSE_V22 = "3c3fe2b904fd694f28d2f646ee16dddb"
++FSL_EULA_FILE_MD5SUM_LA_OPT_NXP_SOFTWARE_LICENSE_V24 = "f35df765ff17e69043ea21f350e3229c"
+ FSL_EULA_FILE_MD5SUMS = " \
+     ${FSL_EULA_FILE_MD5SUM_LA_OPT_BASE_LICENSE_V8} \
+     ${FSL_EULA_FILE_MD5SUM_LA_OPT_BASE_LICENSE_V10} \
+@@ -49,6 +51,8 @@ FSL_EULA_FILE_MD5SUMS = " \
+     ${FSL_EULA_FILE_MD5SUM_LA_OPT_NXP_SOFTWARE_LICENSE_V9} \
+     ${FSL_EULA_FILE_MD5SUM_LA_OPT_NXP_SOFTWARE_LICENSE_V10} \
+     ${FSL_EULA_FILE_MD5SUM_LA_OPT_NXP_SOFTWARE_LICENSE_V11} \
++    ${FSL_EULA_FILE_MD5SUM_LA_OPT_NXP_SOFTWARE_LICENSE_V22} \
++    ${FSL_EULA_FILE_MD5SUM_LA_OPT_NXP_SOFTWARE_LICENSE_V24} \
+ "
+ 
+ # The checksum for the EULA in the layer
+-- 
+2.32.0
+
