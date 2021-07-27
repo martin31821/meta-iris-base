@@ -12,6 +12,7 @@ pipeline {
                 // Clean workspace
                 cleanWs disableDeferredWipeout: true, deleteDirs: true
                 sh 'printenv'
+                checkout([$class: 'GitSCM', branches: [[name: '*/develop,*/${BRANCH_NAME}']], extensions: [[$class: 'CloneOption', noTags: false, reference: '', shallow: false]], userRemoteConfigs: [[url: 'https://github.com/iris-GmbH/iris-kas.git']]])
             }
         }
     }
