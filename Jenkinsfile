@@ -15,7 +15,29 @@ pipeline {
                 checkout([$class: 'GitSCM', branches: [[name: '*/develop']], extensions: [[$class: 'CloneOption', noTags: false, reference: '', shallow: false]], userRemoteConfigs: [[url: 'https://github.com/iris-GmbH/iris-kas.git']]])
                 // checkout branch with the same name, if exists
                 sh "git checkout ${BRANCH_NAME} || true"
+                stash includes: '**/*', name: 'kas'
             }
+        }
+        stage('Clone Meta Layers') {
+            agent {
+                docker {
+                    image '693612562064.dkr.ecr.eu-central-1.amazonaws.com/kas:latest'
+                }
+            }
+            steps {
+                unstash 'kas'
+                sh 'kas shell --update -c "exit" kas-irma6-base.yml'
+            }
+        }
+    }
+
+    post {
+        // Clean after build
+        always {
+            cleanWs(cleanWhenNotBuilt: false,
+                    deleteDirs: true,
+                    disableDeferredWipeout: true,
+                    notFailBuild: true)
         }
     }
 }
