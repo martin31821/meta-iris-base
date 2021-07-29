@@ -16,6 +16,8 @@ pipeline {
                 // checkout branch with the same name, if exists
                 sh "git checkout ${BRANCH_NAME} || true"
                 stash includes: '**/*', name: 'kas'
+                // get auth token for ECR
+                sh "aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 693612562064.dkr.ecr.eu-central-1.amazonaws.com"
             }
         }
         stage('Clone Meta Layers') {
