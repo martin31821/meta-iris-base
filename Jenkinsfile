@@ -26,6 +26,9 @@ pipeline {
                     image '693612562064.dkr.ecr.eu-central-1.amazonaws.com/kas:latest'
                 }
             }
+            environment {
+                HOME = '/home/builder'
+            }
             steps {
                 unstash 'kas'
                 withCredentials(bindings: [sshUserPrivateKey(credentialsId: 'ssh_key', keyFileVariable: 'SSH_PRIVATE_KEY_FILE')]) {
