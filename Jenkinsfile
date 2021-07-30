@@ -17,7 +17,7 @@ def targets_string = targets.join(' ')
 def images_string = images.join(' ')
 
 // Generate parallel & dynamic compile steps
-def parallelImageStagesMap = targets.collectEntries, images_string {
+def parallelImageStagesMap = targets.collectEntries {
     ["${it}" : generateImageStages(it, images_string)]  
 }
 
