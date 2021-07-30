@@ -4,7 +4,38 @@
 // meta-layers to check for identical branches
 def meta_layers = [ "meta-iris-base" ]
 
-def loop_meta_layers(meta_layers) {
+// Target multiconfigs for the Jenkins pipeline
+def targets = [ "sc573-gen6", "imx8mp-evk" ]
+
+// Target images for the Jenkins pipeline
+def images = [ "irma6-base" ]
+
+// Make targets parsable as environment variable
+def targets_string = targets.join(' ')
+
+// Make images parsable as environment variable
+def images_string = images.join(' ')
+
+// Generate parallel & dynamic compile steps
+def parallelImageStagesMap = targets.collectEntries {
+    ["${it}" : generateImageStages(it)]  
+}
+
+def generateImageStages(target) {
+    return {
+        stage("Build ${target} Image") {
+            awsCodeBuild buildSpecFile: 'buildspecs/build_firmware_images.yml',
+                credentialsType: 'keys',
+                downloadArtifacts: 'false',
+                region: 'eu-central-1',
+                sourceControlType: 'jenkins',
+                projectName: 'iris-devops-kas-build-codebuild',
+                envVariables: "[ { MULTI_CONF, $target }, { IMAGES, $images_string }, { GIT_TAG, $GIT_TAG }, { HOME, /home/builder } ]"
+        }
+    }
+}
+
+def gitCheckoutMetaLayers(meta_layers) {
    for (int i = 0; i < meta_layers.size(); i++) {
        sh """
            cd ${meta_layers[i]}
@@ -33,6 +64,7 @@ pipeline {
                 sh "aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 693612562064.dkr.ecr.eu-central-1.amazonaws.com"
             }
         }
+        
         stage('Clone Meta Layers') {
             agent {
                 docker {
@@ -50,7 +82,15 @@ pipeline {
                     sh 'kas shell --update -c "exit" kas-irma6-base.yml'
                 }
                 // checkout any identical named branches in the meta-layers
-                loop_meta_layers(meta_layers)
+                gitCheckoutMetaLayers(meta_layers)
+            }
+        }
+
+        stage('Build Firmware') {
+            steps {
+                script {
+                    parallel parallelImageStagesMap
+                }
             }
         }
     }
