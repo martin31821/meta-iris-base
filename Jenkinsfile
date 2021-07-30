@@ -34,7 +34,7 @@ def gitCheckoutMetaLayers(meta_layers) {
 def generateImageStages(target, images_string) {
     return {
         stage("Build ${target} Image") {
-            awsCodeBuild buildSpecFile: 'buildspecs/build_firmware_images.yml',
+            awsCodeBuild buildSpecFile: 'buildspecs/build_firmware_images_develop.yml',
                 credentialsType: 'keys',
                 downloadArtifacts: 'false',
                 region: 'eu-central-1',
