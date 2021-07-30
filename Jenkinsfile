@@ -28,7 +28,9 @@ pipeline {
             }
             steps {
                 unstash 'kas'
-                sh 'kas shell --update -c "exit" kas-irma6-base.yml'
+                withCredentials(bindings: [sshUserPrivateKey(credentialsId: 'ssh_key', keyFileVariable: 'SSH_PRIVATE_KEY_FILE')]) {
+                    sh 'kas shell --update -c "exit" kas-irma6-base.yml'
+                }
             }
         }
     }
