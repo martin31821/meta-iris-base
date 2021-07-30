@@ -27,13 +27,11 @@ pipeline {
                 }
             }
             environment {
-                HOME = '/home/builder'
+                HOME = '/tmp'
             }
             steps {
                 unstash 'kas'
                 withCredentials(bindings: [sshUserPrivateKey(credentialsId: 'ssh_key', keyFileVariable: 'SSH_PRIVATE_KEY_FILE')]) {
-                    sh 'whoami'
-                    sh 'ls -la /home/builder'
                     sh 'kas shell --update -c "exit" kas-irma6-base.yml'
                 }
             }
