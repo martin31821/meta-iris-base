@@ -21,6 +21,16 @@ def parallelImageStagesMap = targets.collectEntries {
     ["${it}" : generateImageStages(it, images_string)]  
 }
 
+def gitCheckoutMetaLayers(meta_layers) {
+   for (int i = 0; i < meta_layers.size(); i++) {
+       sh """
+           cd ${meta_layers[i]}
+           git checkout ${BRANCH_NAME} || true
+           cd ..
+       """
+   }
+}
+
 def generateImageStages(target, images_string) {
     return {
         stage("Build ${target} Image") {
@@ -30,19 +40,9 @@ def generateImageStages(target, images_string) {
                 region: 'eu-central-1',
                 sourceControlType: 'jenkins',
                 projectName: 'iris-devops-kas-build-codebuild',
-                envVariables: "[ { MULTI_CONF, $target }, { IMAGES, $images_string }, { GIT_TAG, $GIT_TAG }, { HOME, /home/builder } ]"
+                envVariables: "[ { MULTI_CONF, $target }, { IMAGES, $images_string }, { BRANCH_NAME, $BRANCH_NAME }, { GIT_COMMIT, $GIT_COMMIT }, { HOME, /home/builder } ]"
         }
     }
-}
-
-def gitCheckoutMetaLayers(meta_layers) {
-   for (int i = 0; i < meta_layers.size(); i++) {
-       sh """
-           cd ${meta_layers[i]}
-           git checkout ${BRANCH_NAME} || true
-           cd ..
-       """
-   }
 }
 
 pipeline {
