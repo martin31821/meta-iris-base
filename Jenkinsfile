@@ -27,12 +27,22 @@ pipeline {
                 }
             }
             environment {
+                // set HOME, so KAS a a location where it can store the .ssh directory
                 HOME = '/tmp'
             }
             steps {
                 unstash 'kas'
                 withCredentials(bindings: [sshUserPrivateKey(credentialsId: 'ssh_key', keyFileVariable: 'SSH_PRIVATE_KEY_FILE')]) {
+                    // clone all meta layers using kas
                     sh 'kas shell --update -c "exit" kas-irma6-base.yml'
+                }
+                // checkout any identical named branches in the meta-layers
+                for (int i = 0; i < meta_layers.size(); i++) {
+                    sh """
+                        cd ${meta_layers[i]}
+                        git checkout ${BRANCH_NAME} || true
+                        cd ..
+                    """
                 }
             }
         }
