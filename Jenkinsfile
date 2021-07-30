@@ -8,7 +8,7 @@ def meta_layers = [ "meta-iris-base" ]
 def targets = [ "sc573-gen6", "imx8mp-evk" ]
 
 // Target images for the Jenkins pipeline
-def images = [ "irma6-base", "irma6-base" ]
+def images = [ "irma6-base" ]
 
 // Make targets parsable as environment variable
 def targets_string = targets.join(' ')
@@ -17,11 +17,11 @@ def targets_string = targets.join(' ')
 def images_string = images.join(' ')
 
 // Generate parallel & dynamic compile steps
-def parallelImageStagesMap = targets.collectEntries {
-    ["${it}" : generateImageStages(it)]  
+def parallelImageStagesMap = targets.collectEntries, images_string {
+    ["${it}" : generateImageStages(it, images_string)]  
 }
 
-def generateImageStages(target) {
+def generateImageStages(target, images_string) {
     return {
         stage("Build ${target} Image") {
             awsCodeBuild buildSpecFile: 'buildspecs/build_firmware_images.yml',
