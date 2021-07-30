@@ -16,6 +16,9 @@ def loop_meta_layers(meta_layers) {
 
 pipeline {
     agent any
+    options {
+        disableConcurrentBuilds()
+    }
     stages {
         stage('Preparation Stage') {
             steps {
