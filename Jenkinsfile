@@ -21,10 +21,10 @@ def images_string = images.join(' ')
 
 // Generate parallel & dynamic compile steps
 def parallelImageStagesMap = targets.collectEntries {
-    ["${it}" : generateImageStages(it, images_string)]  
+    ["${it}" : generateImageStages(it, images_string, meta_layers_string)]  
 }
 
-def generateImageStages(target, images_string) {
+def generateImageStages(target, images_string, meta_layers_string) {
     return {
         stage("Build ${target} Image") {
             awsCodeBuild buildSpecFile: 'buildspecs/build_firmware_images_develop.yml',
@@ -33,7 +33,7 @@ def generateImageStages(target, images_string) {
                 region: 'eu-central-1',
                 sourceControlType: 'jenkins',
                 sourceTypeOverride: 'S3',
-                sourceLocationOverride: "${S3_TEMP_LOCATION}/${JOB_NAME}/${GIT_TAG}/${GIT_TAG}-build-firmware-images-develop.zip}",
+                sourceLocationOverride: "${S3_TEMP_LOCATION}/${JOB_NAME}/${GIT_COMMIT}/${GIT_COMMIT}-build-firmware-images-develop.zip}",
                 projectName: 'iris-devops-kas-build-codebuild',
                 envVariables: "[ { MULTI_CONF, $target }, { IMAGES, $images_string }, { BRANCH_NAME, $BRANCH_NAME }, { GIT_COMMIT, $GIT_COMMIT }, { LAYERS, $meta_layers_string }, { HOME, /home/builder } ]"
         }
