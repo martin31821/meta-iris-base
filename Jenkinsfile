@@ -86,7 +86,7 @@ pipeline {
                 gitCheckoutMetaLayers(meta_layers)
                 sh 'touch kas.tar'
                 sh 'tar cf kas.tar --exclude=kas.tar .'
-                stash includes: 'kas.tar', name: 'kas'
+                stash includes: 'kas.tar,buildspecs/**/*', name: 'kas'
             }
         }
 
