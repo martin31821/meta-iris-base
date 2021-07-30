@@ -2,7 +2,7 @@
 // Copyright (C) 2021 iris-GmbH infrared & intelligent sensors
 
 // meta-layers to check for identical branches
-def meta_layers = [ "https://github.com/iris-GmbH/meta-iris-base.git" ]
+def meta_layers = [ "meta-iris-base" ]
 
 def loop_meta_layers(meta_layers) {
    for (int i = 0; i < meta_layers.size(); i++) {
@@ -37,7 +37,7 @@ pipeline {
                 }
             }
             environment {
-                // set HOME, so KAS a a location where it can store the .ssh directory
+                // set HOME, so KAS has a location where it can store the .ssh directory
                 HOME = '/tmp'
             }
             steps {
