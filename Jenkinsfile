@@ -8,7 +8,7 @@ def meta_layers = [ "meta-iris-base" ]
 def targets = [ "sc573-gen6", "imx8mp-evk" ]
 
 // Target images for the Jenkins pipeline
-def images = [ "irma6-base" ]
+def images = [ "irma6-base", "irma6-base" ]
 
 // Make targets parsable as environment variable
 def targets_string = targets.join(' ')
@@ -76,6 +76,7 @@ pipeline {
                 HOME = '/tmp'
             }
             steps {
+                cleanWs disableDeferredWipeout: true, deleteDirs: true
                 unstash 'kas'
                 withCredentials(bindings: [sshUserPrivateKey(credentialsId: 'ssh_key', keyFileVariable: 'SSH_PRIVATE_KEY_FILE')]) {
                     // clone all meta layers using kas
