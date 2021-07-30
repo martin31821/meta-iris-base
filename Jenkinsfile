@@ -85,7 +85,7 @@ pipeline {
                 // checkout any identical named branches in the meta-layers
                 gitCheckoutMetaLayers(meta_layers)
                 sh 'touch kas.tar'
-                sh 'tar cf --exclude=kas.tar kas.tar .'
+                sh 'tar --exclude=kas.tar cf kas.tar .'
                 stash includes: 'kas.tar', name: 'kas'
             }
         }
