@@ -4,6 +4,16 @@
 // meta-layers to check for identical branches
 def meta_layers = [ "https://github.com/iris-GmbH/meta-iris-base.git" ]
 
+def loop_meta_layers(meta_layers) {
+   for (int i = 0; i < meta_layers.size(); i++) {
+       sh """
+           cd ${meta_layers[i]}
+           git checkout ${BRANCH_NAME} || true
+           cd ..
+       """
+   }
+}
+
 pipeline {
     agent any
     stages {
@@ -37,13 +47,7 @@ pipeline {
                     sh 'kas shell --update -c "exit" kas-irma6-base.yml'
                 }
                 // checkout any identical named branches in the meta-layers
-                for (int i = 0; i < meta_layers.size(); i++) {
-                    sh """
-                        cd ${meta_layers[i]}
-                        git checkout ${BRANCH_NAME} || true
-                        cd ..
-                    """
-                }
+                loop_meta_layers(meta_layers)
             }
         }
     }
