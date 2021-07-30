@@ -84,11 +84,14 @@ pipeline {
                 }
                 // checkout any identical named branches in the meta-layers
                 gitCheckoutMetaLayers(meta_layers)
+                stash includes: '**/*', name: 'kas'
             }
         }
 
         stage('Build Firmware') {
             steps {
+                cleanWs disableDeferredWipeout: true, deleteDirs: true
+                unstash 'kas'
                 script {
                     parallel parallelImageStagesMap
                 }
