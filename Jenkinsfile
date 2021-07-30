@@ -45,6 +45,12 @@ pipeline {
     options {
         disableConcurrentBuilds()
     }
+    environment {
+        // S3 for permanent artifacts
+        S3_LOCATION = 'iris-devops-artifacts-693612562064'
+        // S3 with auto-expiration enabled
+        S3_TEMP_LOCATION = 'iris-devops-tempartifacts-693612562064'
+    }
     stages {
         stage('Preparation Stage') {
             steps {
