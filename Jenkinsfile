@@ -20,7 +20,7 @@ pipeline {
                 sh 'printenv'
                 // checkout iris-kas repo
                 checkout([$class: 'GitSCM',
-                    branches: [[name: '*/develop']],
+                    branches: [[name: '*/feature/jaor/add_Jenkinsfile']],
                     extensions: [[$class: 'CloneOption',
                     noTags: false,
                     reference: '',
