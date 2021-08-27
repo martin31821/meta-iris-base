@@ -26,6 +26,14 @@ pipeline {
                     reference: '',
                     shallow: false]],
                     userRemoteConfigs: [[url: 'https://github.com/iris-GmbH/iris-kas.git']]])
+                // manually upload kas sources to S3, as to prevent upload conflicts in parallel steps
+                zip dir: '', zipFile: 'iris-kas-sources.zip'
+                s3Upload acl: 'Private',
+                    bucket: "${S3_TEMP_BUCKET}",
+                    file: 'iris-kas-sources.zip',
+                    path: "${JOB_NAME}/${GIT_COMMIT}/iris-kas-sources.zip",
+                    payloadSigningEnabled: true,
+                    sseAlgorithm: 'AES256'
             }
         }
         
@@ -49,7 +57,7 @@ pipeline {
                                 credentialsType: 'keys',
                                 downloadArtifacts: 'false',
                                 region: 'eu-central-1',
-                                sourceControlType: 'jenkins',
+                                sourceControlType: 'project',
                                 sourceTypeOverride: 'S3',
                                 sourceLocationOverride: "${S3_TEMP_BUCKET}/${JOB_NAME}/${GIT_COMMIT}/iris-kas-sources.zip",
                                 envVariables: "[ { MULTI_CONF, $MULTI_CONF }, { IMAGES, $IMAGES }, { BRANCH_NAME, $BRANCH_NAME }, { SDK_IMAGE, $SDK_IMAGE }, { HOME, /home/builder } ]"
