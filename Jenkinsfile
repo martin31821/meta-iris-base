@@ -17,7 +17,6 @@ pipeline {
             steps {
                 // clean workspace
                 cleanWs disableDeferredWipeout: true, deleteDirs: true
-                sh 'printenv'
                 // checkout iris-kas repo
                 checkout([$class: 'GitSCM',
                     branches: [[name: '*/feature/jaor/add_Jenkinsfile']],
@@ -26,6 +25,8 @@ pipeline {
                     reference: '',
                     shallow: false]],
                     userRemoteConfigs: [[url: 'https://github.com/iris-GmbH/iris-kas.git']]])
+                // try to checkout identical named branch
+                sh "git checkout ${BRANCH_NAME} || true"
                 // manually upload kas sources to S3, as to prevent upload conflicts in parallel steps
                 zip dir: '', zipFile: 'iris-kas-sources.zip'
                 s3Upload acl: 'Private',
@@ -34,6 +35,7 @@ pipeline {
                     path: "${JOB_NAME}/${GIT_COMMIT}/iris-kas-sources.zip",
                     payloadSigningEnabled: true,
                     sseAlgorithm: 'AES256'
+                sh 'printenv | sort'
             }
         }
         
