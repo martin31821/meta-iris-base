@@ -45,7 +45,7 @@ pipeline {
                     stage("Build Firmware Artifacts") {
                         steps {
                             awsCodeBuild buildSpecFile: 'buildspecs/build_firmware_images_develop.yml',
-                                projectName: 'iris-devops-kas-build-codebuild',
+                                projectName: 'iris-devops-kas-large-amd-codebuild',
                                 credentialsType: 'keys',
                                 downloadArtifacts: 'false',
                                 region: 'eu-central-1',
