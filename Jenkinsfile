@@ -28,7 +28,7 @@ pipeline {
                     noTags: false,
                     reference: '',
                     shallow: false]],
-                    userRemoteConfigs: [[url: 'git@github.com:iris-GmbH/iris-kas.git']]])
+                    userRemoteConfigs: [[url: 'https://github.com/iris-GmbH/iris-kas.git']]])
             }
         }
         
