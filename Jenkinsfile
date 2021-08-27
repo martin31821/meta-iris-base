@@ -8,9 +8,6 @@ pipeline {
         parallelsAlwaysFailFast()
     }
     environment {
-        // S3 bucket for saving release artifacts
-        S3_RELEASE_BUCKET = 'iris-devops-artifacts-693612562064'
-
         // S3 bucket for temporary artifacts
         S3_TEMP_BUCKET = 'iris-devops-tempartifacts-693612562064'
         SDK_IMAGE = 'irma6-maintenance'
@@ -54,8 +51,8 @@ pipeline {
                                 region: 'eu-central-1',
                                 sourceControlType: 'jenkins',
                                 sourceTypeOverride: 'S3',
-                                sourceLocationOverride: "${S3_TEMP_LOCATION}/${JOB_NAME}/${GIT_COMMIT}/iris-kas-sources.zip",
-                                envVariables: "[ { MULTI_CONF, $MULTICONF }, { IMAGES, $IMAGES }, { BRANCH_NAME, $BRANCH_NAME }, { HOME, /home/builder } ]"
+                                sourceLocationOverride: "${S3_TEMP_BUCKET}/${JOB_NAME}/${GIT_COMMIT}/iris-kas-sources.zip",
+                                envVariables: "[ { MULTI_CONF, $MULTICONF }, { IMAGES, $IMAGES }, { BRANCH_NAME, $BRANCH_NAME }, { SDK_IMAGE, $SDK_IMAGE }, { HOME, /home/builder } ]"
                         }
                     }
                 }
