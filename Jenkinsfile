@@ -52,7 +52,7 @@ pipeline {
                                 sourceControlType: 'jenkins',
                                 sourceTypeOverride: 'S3',
                                 sourceLocationOverride: "${S3_TEMP_BUCKET}/${JOB_NAME}/${GIT_COMMIT}/iris-kas-sources.zip",
-                                envVariables: "[ { MULTI_CONF, $MULTICONF }, { IMAGES, $IMAGES }, { BRANCH_NAME, $BRANCH_NAME }, { SDK_IMAGE, $SDK_IMAGE }, { HOME, /home/builder } ]"
+                                envVariables: "[ { MULTI_CONF, $MULTI_CONF }, { IMAGES, $IMAGES }, { BRANCH_NAME, $BRANCH_NAME }, { SDK_IMAGE, $SDK_IMAGE }, { HOME, /home/builder } ]"
                         }
                     }
                 }
